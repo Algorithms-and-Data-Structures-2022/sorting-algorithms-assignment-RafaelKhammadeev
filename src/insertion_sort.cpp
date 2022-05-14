@@ -1,5 +1,4 @@
 #include "assignment/insertion_sort.hpp"
-
 #include <utility>  // move, swap
 
 #include "assignment/partitioning.hpp"  // middle_of
@@ -9,37 +8,47 @@ namespace assignment {
   int linear_search(const std::vector<int>& arr, int index) {
 
     // итерация всех предыдущих элементов [0, index - 1] (они находятся в отсортированном порядке)
-    for (int curr_pos = -1 /* ... */; false /* условие ... */; /* обновление curr_pos ... */) {
-
+    for (int curr_ind = 0; curr_ind < index; curr_ind++) {
+      if (arr[index] <= arr[curr_ind]){
+        return curr_ind;
+      }
       // если текущий элемент меньше или равен вставляемому, позиция для вставки найдена ...
     }
 
-    return -1;  // здесь что-то не так ...
+    return index;  // здесь что-то не так ...
   }
 
   int binary_search(const std::vector<int>& arr, int index) {
-
     // начало, конец и середина области поиска места для вставки [0, index - 1]
-    int start = -1 /* здесь что-то не так ... */;
-    int stop = -1 /* здесь что-то не так ... */;
-    int middle = -1 /* здесь что-то не так ... */;
+    int start = 0 /* здесь что-то не так ... */;
+    int stop = index - 1 /* здесь что-то не так ... */;
+    int middle = middle_of(start, stop) /* здесь что-то не так ... */;
+
 
     // ищем до тех пор, пока границы не схлопнулись
     while (start <= stop) {
 
       // возвращаем позицию для вставки
       if (arr[index] == arr[middle]) {
-        return -1 /* здесь что-то не так ... */;
+        return middle;
       }
 
       // обновляем границы области поиска ...
+      else if (arr[index] < arr[middle]){
+        stop = middle - 1;
+      }
+
+      else {
+        start = middle + 1;
+      }
+      // чтобы while не циклился то пишем middle + 1, middle - 1
 
       // обновляем середину области поиска
-      middle = middle_of(-1, -1);  // здесь что-то не так ...
+      middle = middle_of(start, stop);  // здесь что-то не так ...
     }
 
     // в конечном счете возвращаем начало последней области поиска
-    return -1;  // здесь что-то не так ...
+    return start;  // здесь что-то не так ...
   }
 
   void InsertionSort::Sort(std::vector<int>& arr) const {
@@ -51,7 +60,11 @@ namespace assignment {
 
       // поиск индекса для вставки элемента с индексом index в область [0, index - 1]
       const int ins_index = searcher_(arr, index);
-
+      if (ins_index != index) {
+        for (int i = index; i > ins_index; i--) {
+          std::swap(arr[i - 1], arr[i]);
+        }
+      }
       // если индекс вставки не совпадает с текущей позицией элемента,
       // производим вставку элемента на вычисленную позицию (std::copy или цикл for) ...
     }
